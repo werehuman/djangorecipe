@@ -45,12 +45,11 @@ class Recipe(object):
         options.setdefault('wsgilog', '')
         options.setdefault('logfile', '')
 
-        import ipdb; ipdb.set_trace()
         # Check if we should patch files with gevent.monkey
         if self.options.get('gevent', '').lower() == 'true':
-            excludes_list = self.options('gevent_not_patch', '').split(',')
-            excludes = ', '.join(["%s=False" % s.strip()
-                                  for s in excludes_list])
+            excludes_list = [s.strip() for s in self.options.get(
+                    'gevent_not_patch', '').split(',')]
+            excludes = ', '.join(["%s=False" % s for s in excludes_list if s])
             self.initialization = gevent_patch % {'excludes': excludes}
         else:
             self.initialization = ''
@@ -63,7 +62,6 @@ class Recipe(object):
         extra_paths = self.get_extra_paths()
         requirements, ws = self.egg.working_set(['djangorecipe'])
 
-        import ipdb; ipdb.set_trace()
         script_paths = []
         # Create the Django management script
         script_paths.extend(self.create_manage_script(extra_paths, ws))
