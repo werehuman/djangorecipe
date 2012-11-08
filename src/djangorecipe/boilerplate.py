@@ -29,6 +29,11 @@ production_settings = """
 from %(project)s.settings import *
 """
 
+gevent_patch = """
+from gevent import monkey
+monkey.patch_all(%(excludes)s)
+"""
+
 development_settings = """
 from %(project)s.settings import *
 DEBUG=True
